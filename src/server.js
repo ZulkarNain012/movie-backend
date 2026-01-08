@@ -1,18 +1,14 @@
 const fastify = require("fastify")({ logger: true });
 require("dotenv").config();
 
-fastify.register(require("@fastify/cors"), {
-  origin: "*",
-});
 
 fastify.addHook("onRequest", (request, reply, done) => {
-  reply
-    .header("Access-Control-Allow-Origin", "*")
-    .header("Access-Control-Allow-Methods", "GET,POST,OPTIONS")
-    .header("Access-Control-Allow-Headers", "Content-Type");
+  reply.header("Access-Control-Allow-Origin", "*");
+  reply.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
+  reply.header("Access-Control-Allow-Headers", "Content-Type");
 
   if (request.method === "OPTIONS") {
-    reply.status(200).send();
+    reply.code(200).send();
     return;
   }
   done();
