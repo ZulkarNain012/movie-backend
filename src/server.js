@@ -1,21 +1,18 @@
 const fastify = require("fastify")({ logger: true });
 require("dotenv").config();
 
-
-fastify.addHook("onRequest", (request, reply, done) => {
-  reply.header("Access-Control-Allow-Origin", "*");
-  reply.header("Access-Control-Allow-Methods", "GET,POST,OPTIONS");
-  reply.header("Access-Control-Allow-Headers", "Content-Type");
-
-  if (request.method === "OPTIONS") {
-    reply.code(200).send();
-    return;
-  }
-  done();
+// Use Fastify CORS plugin to properly handle preflight and CORS headers
+fastify.register(require("@fastify/cors"), {
+  origin: true,
+  methods: ["GET", "POST", "OPTIONS"],
+  allowedHeaders: ["Content-Type"],
 });
 
-// routes
-fastify.register(require("./routes/movierecommend.routes"));
+// routes (prefixed with /api)
+fastify.register(require("./routes/movierecommend.routes"), {
+  prefix: "/api",
+});
+
 
 const start = async () => {
   try {
